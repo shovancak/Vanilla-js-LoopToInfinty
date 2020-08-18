@@ -1,11 +1,23 @@
 const imageContainer = document.getElementById("image-container");
 const loadingSpinner = document.getElementById("loading-spinner");
 
+let ready = false;
+let imagesLoaded = 0;
+let totalImages = 0;
 let imagesArray = [];
 
-const count = 10;
+const count = 25;
 const apiKey = "BIZgMIiPodIobg8jzZZDypOfM6Pw3rgvJx4AnVzoW3I";
 const apiUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${count}`;
+
+const imageLoaded = () => {
+  console.log("Image loaded:", imagesLoaded);
+  imagesLoaded++;
+  if (imagesLoaded === totalImages) {
+    ready = true;
+    console.log("ready =", ready);
+  }
+};
 
 const setAttributes = (domElement, attributes) => {
   for (const key in attributes) {
@@ -14,6 +26,9 @@ const setAttributes = (domElement, attributes) => {
 };
 
 const displayImages = () => {
+  imagesLoaded = 0;
+  totalImages = imagesArray.length;
+  console.log("total images:", totalImages);
   imagesArray.forEach((image) => {
     const item = document.createElement("a");
     // item.setAttribute("href", image.links.html);
@@ -33,12 +48,14 @@ const displayImages = () => {
       title: image.alt_description,
     });
 
+    img.addEventListener("load", imageLoaded);
+
     item.appendChild(img);
     imageContainer.appendChild(item);
   });
 };
 
-const getImages = async () => {
+const getUnsplashImages = async () => {
   try {
     const response = await fetch(apiUrl);
     imagesArray = await response.json();
@@ -51,12 +68,12 @@ const getImages = async () => {
 
 window.addEventListener("scroll", () => {
   if (
-    window.innerHeight + window.scrollY >=
-    document.body.offsetHeight - 1000
+    window.innerHeight + window.scrollY >= document.body.offsetHeight - 1000 &&
+    ready
   ) {
-    getImages();
-    console.log("Load more images.");
+    ready = false;
+    getUnsplashImages();
   }
 });
 
-getImages();
+getUnsplashImages();
