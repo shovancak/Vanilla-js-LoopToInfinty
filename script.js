@@ -6,14 +6,16 @@ let imagesLoaded = 0;
 let totalImages = 0;
 let imagesArray = [];
 
-const count = 25;
+let count = 7;
 const apiKey = "BIZgMIiPodIobg8jzZZDypOfM6Pw3rgvJx4AnVzoW3I";
-const apiUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${count}`;
+let apiUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${count}`;
 
 const imageLoaded = () => {
   imagesLoaded++;
   if (imagesLoaded === totalImages) {
     ready = true;
+    count = 25;
+    apiUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${count}`;
   }
 };
 
