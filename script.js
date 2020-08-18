@@ -49,4 +49,14 @@ const getImages = async () => {
   }
 };
 
+window.addEventListener("scroll", () => {
+  if (
+    window.innerHeight + window.scrollY >=
+    document.body.offsetHeight - 1000
+  ) {
+    getImages();
+    console.log("Load more images.");
+  }
+});
+
 getImages();
